@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const verify = require('../../middleware/verify.js');
 const stalkLog = require('../../middleware/stalklog.js');
 const emailexists = require('../../middleware/emailexist.js');
+const uservalidation = require('../../middleware/uservalidation.js');
 
 // instansiating express router
 const router = express.Router();
@@ -52,7 +53,7 @@ router.get('/spec/:identifier',verify,stalkLog,async (req,res) => {
 });
 
 // signing up the user
-router.post('/', emailexists ,async (req, res) => {
+router.post('/', emailexists , uservalidation ,async (req, res) => {
     // TODO : ADD EMAIL ALREADY EXISTS CHECK
     try {
         const encryptedPassword = md5(req.body.password);
