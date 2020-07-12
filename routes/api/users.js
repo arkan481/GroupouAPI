@@ -3,7 +3,8 @@ const md5 = require('md5');
 const UserModel = require('../../models/Users.js');
 const jwt = require('jsonwebtoken');
 const verify = require('../../middleware/verify.js');
-const stalkLog = require('../../middleware/stalklog');
+const stalkLog = require('../../middleware/stalklog.js');
+const emailexists = require('../../middleware/emailexist.js');
 
 // instansiating express router
 const router = express.Router();
@@ -51,7 +52,7 @@ router.get('/spec/:identifier',verify,stalkLog,async (req,res) => {
 });
 
 // signing up the user
-router.post('/', async (req, res) => {
+router.post('/', emailexists ,async (req, res) => {
     // TODO : ADD EMAIL ALREADY EXISTS CHECK
     try {
         const encryptedPassword = md5(req.body.password);
@@ -114,6 +115,7 @@ router.post('/login', async (req, res) => {
 });
 
 // updating the user password
+// TODO : ADD PARAM VALIDATOR
 router.patch('/me/changepassword',verify, async (req,res)=>{
     const updatingUserID = req.user._id;
     const encryptedPassword = md5(req.body.password);
